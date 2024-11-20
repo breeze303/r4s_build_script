@@ -111,7 +111,8 @@ git clone https://$github/UnblockNeteaseMusic/luci-app-unblockneteasemusic packa
 sed -i 's/解除网易云音乐播放限制/网易云音乐解锁/g' package/new/luci-app-unblockneteasemusic/root/usr/share/luci/menu.d/luci-app-unblockneteasemusic.json
 
 # Theme
-git clone --depth 1 https://$github/sbwml/luci-theme-argon package/new/luci-theme-argon
+git clone --depth 1 https://$github/jerrykuku/luci-theme-argon package/new/luci-theme-argon/luci-theme-argon
+git clone --depth 1 https://$github/jerrykuku/luci-app-argon-config package/new/luci-theme-argon/luci-app-argon-config
 
 # Mosdns
 git clone https://$github/sbwml/luci-app-mosdns -b v5 package/new/mosdns
