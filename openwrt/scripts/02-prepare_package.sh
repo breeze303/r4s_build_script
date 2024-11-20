@@ -95,6 +95,9 @@ git clone https://github.com/sbwml/package_new_nethogs package/new/nethogs
 # SSRP & Passwall
 rm -rf feeds/packages/net/{xray-core,v2ray-core,v2ray-geodata,sing-box}
 git clone https://$github/sbwml/openwrt_helloworld package/new/helloworld -b v5
+rm -rf package/new/helloworld/luci-app-passwall
+git clone https://$github/xiaorouji/openwrt-passwall package/new/helloworld/passwall 
+mv package/new/helloworld/passwall/luci-app-passwall package/new/helloworld/
 
 # alist
 rm -rf feeds/packages/net/alist feeds/luci/applications/luci-app-alist
