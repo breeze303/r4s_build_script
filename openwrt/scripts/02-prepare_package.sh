@@ -133,6 +133,9 @@ sed -i 's/services/network/g' feeds/luci/applications/luci-app-nlbwmon/htdocs/lu
 # mentohust
 git clone https://github.com/sbwml/luci-app-mentohust package/new/mentohust
 
+# lucky
+git clone --depth 1 https://github.com/sirpdboy/luci-app-lucky.git package/new/lucky
+
 # custom packages
 rm -rf feeds/packages/utils/coremark
 git clone https://$github/sbwml/openwrt_pkgs package/new/custom --depth=1
