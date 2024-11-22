@@ -134,7 +134,7 @@ sed -i 's/services/network/g' feeds/luci/applications/luci-app-nlbwmon/htdocs/lu
 git clone https://github.com/sbwml/luci-app-mentohust package/new/mentohust
 
 # lucky
-git clone --depth 1 https://github.com/sirpdboy/luci-app-lucky.git package/new/lucky
+git clone --depth 1 https://github.com/breeze303/luci-app-lucky.git package/new/lucky
 
 # custom packages
 rm -rf feeds/packages/utils/coremark
