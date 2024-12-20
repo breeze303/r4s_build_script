@@ -6,9 +6,6 @@ curl -s $mirror/openwrt/patch/apk-tools/9999-hack-for-linux-pre-releases.patch >
 # libsodium - fix build with lto (GNU BUG - 89147)
 sed -i "/CONFIGURE_ARGS/i\TARGET_CFLAGS += -ffat-lto-objects\n" feeds/packages/libs/libsodium/Makefile
 
-# grub2 -  disable `gc-sections` flag
-sed -i '/PKG_BUILD_FLAGS/ s/$/ no-gc-sections/' package/boot/grub2/Makefile
-
 # haproxy - fix build with quictls
 sed -i '/USE_QUIC_OPENSSL_COMPAT/d' feeds/packages/net/haproxy/Makefile
 
@@ -75,12 +72,7 @@ popd
 
 # perf
 curl -s $mirror/openwrt/patch/openwrt-6.x/musl/990-add-typedefs-for-Elf64_Relr-and-Elf32_Relr.patch > toolchain/musl/patches/990-add-typedefs-for-Elf64_Relr-and-Elf32_Relr.patch
-if [ "$KERNEL_CLANG_LTO" = "y" ]; then
-    curl -s $mirror/openwrt/patch/openwrt-6.x/perf/Makefile.2 > package/devel/perf/Makefile
-else
-    curl -s $mirror/openwrt/patch/openwrt-6.x/perf/Makefile > package/devel/perf/Makefile
-fi
-[ "$ENABLE_MOLD" != y ] && sed -i 's/no-mold//g' package/devel/perf/Makefile
+curl -s $mirror/openwrt/patch/openwrt-6.x/perf/Makefile > package/devel/perf/Makefile
 
 # kselftests-bpf
 curl -s $mirror/openwrt/patch/packages-patches/kselftests-bpf/Makefile > package/devel/kselftests-bpf/Makefile

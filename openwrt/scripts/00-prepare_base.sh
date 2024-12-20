@@ -2,8 +2,13 @@
 
 # Rockchip - rkbin & u-boot
 rm -rf package/boot/rkbin package/boot/uboot-rockchip package/boot/arm-trusted-firmware-rockchip
-git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip
-git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
+if [ "$platform" = "rk3568" ]; then
+    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip
+    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
+else
+    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip -b v2023.04
+    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip -b 0419
+fi
 
 # patch source
 curl -s $mirror/openwrt/patch/generic-24.10/0001-tools-add-upx-tools.patch | patch -p1
@@ -24,8 +29,8 @@ curl -s $mirror/openwrt/patch/generic-24.10/0010-kernel-add-PREEMPT_RT-support-f
 rm -rf tools/dwarves
 git clone https://$github/sbwml/tools_dwarves tools/dwarves
 
-# x86 - disable intel_pstate & mitigations
-sed -i 's/noinitrd/noinitrd intel_pstate=disable mitigations=off/g' target/linux/x86/image/grub-efi.cfg
+# x86 - disable mitigations
+sed -i 's/noinitrd/noinitrd mitigations=off/g' target/linux/x86/image/grub-efi.cfg
 
 # default LAN IP
 sed -i "s/192.168.1.1/$LAN/g" package/base-files/files/bin/config_generate
@@ -99,7 +104,7 @@ git clone https://$gitea/sbwml/shortcut-fe package/new/shortcut-fe
 # dnsmasq
 if [ "$version" = "dev" ]; then
     curl -s $mirror/openwrt/patch/dnsmasq/0001-dnsmasq-drop-extraconftext-parameter.patch | patch -p1
-    [ "$?" -ne 0 ] && curl -s https://init2.cooluc.com/openwrt/patch/dnsmasq/dnsmasq.init > package/network/services/dnsmasq/files/dnsmasq.init
+    [ "$?" -ne 0 ] && curl -s $mirror/openwrt/patch/dnsmasq/dnsmasq.init > package/network/services/dnsmasq/files/dnsmasq.init
 fi
 
 # Patch FireWall 4
@@ -147,6 +152,7 @@ pushd feeds/luci
     curl -s $mirror/openwrt/patch/firewall4/luci-24.10/0004-luci-add-firewall-add-custom-nft-rule-support.patch | patch -p1
     curl -s $mirror/openwrt/patch/firewall4/luci-24.10/0005-luci-app-firewall-add-natflow-offload-support.patch | patch -p1
     curl -s $mirror/openwrt/patch/firewall4/luci-24.10/0006-luci-app-firewall-enable-hardware-offload-only-on-de.patch | patch -p1
+    curl -s $mirror/openwrt/patch/firewall4/luci-24.10/0007-luci-app-firewall-add-fullcone6-option-for-nftables-.patch | patch -p1
 popd
 
 # openssl - quictls
