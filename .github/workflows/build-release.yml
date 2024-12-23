@@ -15,7 +15,7 @@ on:
           - 'netgear_r8500'
           - 'x86_64'
       version:
-        description: 'Select the build version'
+        description: 'Select the build version(选择编译版本)'
         required: true
         default: 'release'
         type: choice
@@ -23,16 +23,16 @@ on:
           - 'release'
           - 'snapshot-24.10'
       ccache:
-        description: 'Enable ccache (Use Cache to speed up next build)'
+        description: 'Enable ccache (Use Cache to speed up next build)(启用缓存)'
         type: boolean
         default: false
       lan_addr:
-        description: 'Setting default LAN address'
+        description: 'Setting default LAN address(设置LAN IP)'
         required: true
         default: '10.0.0.1'
         type: string
       build_options:
-        description: 'Build options (separate multiple options with spaces)'
+        description: 'Build options (separate multiple options with spaces)(编译额外选项)'
         required: false
         default: 'BUILD_FAST=y ENABLE_BPF=y ENABLE_LTO=y ENABLE_LRNG=y ENABLE_MOLD=y KERNEL_CLANG_LTO=y'
         type: string
@@ -52,7 +52,7 @@ jobs:
       with:
         path: r4s_build_script
 
-    - name: Setup variables
+    - name: Setup variables (校准编译环境)
       run: |
         sudo timedatectl set-timezone 'Asia/Shanghai'
         git config --global user.name 'actions'
@@ -60,7 +60,7 @@ jobs:
         echo build_dir="/builder" >> "$GITHUB_ENV"
         [ "${{ github.event.inputs.version }}" = release ] && echo build_version="rc2" >> "$GITHUB_ENV" || echo build_version="dev" >> "$GITHUB_ENV"
 
-    - name: Show system
+    - name: Show system (系统信息)
       run: |
         echo -e "\n\e[1;32mCPU:\e[0m"
         echo "$(grep 'model name' /proc/cpuinfo | head -1 | awk -F ': ' '{print $2}') ($(grep 'cpu MHz' /proc/cpuinfo | head -1 | awk -F ': ' '{print $2}')MHz) x $(grep processor /proc/cpuinfo  | wc -l)"
@@ -74,7 +74,7 @@ jobs:
         uname -a
         echo
 
-    - name: Install Caddy Server
+    - name: Install Caddy Server (安装Caddy服务器)
       run: |
         sudo curl -sL -o /usr/bin/caddy https://github.com/sbwml/r4s_build_script/releases/download/caddy/caddy
         sudo chmod 755 /usr/bin/caddy
@@ -84,25 +84,25 @@ jobs:
         echo "}" >> caddyfile
         sudo /usr/bin/caddy start --config caddyfile --adapter caddyfile
 
-    - name: Free disk space
+    - name: Free disk space (整理磁盘)
       uses: sbwml/actions@free-disk
       with:
         build-mount-path: /builder
 
-    - name: Build System Setup
+    - name: Build System Setup (构建编译环境)
       uses: sbwml/actions@openwrt-build-setup
 
-    - name: Install LLVM
+    - name: Install LLVM (安装LLVM)
       uses: sbwml/actions@install-llvm
 
-    - name: Restore Cached
+    - name: Restore Cached (拉取编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device != 'armv8' && github.event.inputs.device != 'nanopi-r4s' }}
       uses: actions/cache/restore@v4
       with:
         path: /builder/.ccache
         key: openwrt-24.10-${{ github.event.inputs.device }}-ccache
 
-    - name: Restore Cached (releases)
+    - name: Restore Cached (releases) (写入编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device == 'armv8' || github.event.inputs.device == 'nanopi-r4s' }}
       continue-on-error: true
       working-directory: /builder
@@ -116,7 +116,7 @@ jobs:
         echo "Cache restored successfully"
         echo "Cache restored from key: ${{ github.event.inputs.device }}"
 
-    - name: Compile OpenWrt
+    - name: Compile OpenWrt (开始编译Openwrt)
       working-directory: /builder
       id: compile
       continue-on-error: true
@@ -132,14 +132,14 @@ jobs:
         fi
         echo "latest_release=$tags" >>$GITHUB_ENV
 
-    - name: Extensive logs after a failed compilation
+    - name: Extensive logs after a failed compilation (输出构建失败日志信息)
       working-directory: /builder
       if: steps.compile.outcome == 'failure'
       run: |
         cd openwrt
         make V=s
 
-    - name: Delete Cached
+    - name: Delete Cached (整理编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device != 'armv8' && github.event.inputs.device != 'nanopi-r4s' }}
       continue-on-error: true
       working-directory: /builder
@@ -149,7 +149,7 @@ jobs:
       run: |
         gh cache delete openwrt-24.10-${{ github.event.inputs.device }}-ccache || true
 
-    - name: Save Cached
+    - name: Save Cached (选取编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device != 'armv8' && github.event.inputs.device != 'nanopi-r4s' }}
       continue-on-error: true
       uses: actions/cache/save@v4
@@ -157,7 +157,7 @@ jobs:
         path: /builder/.ccache
         key: openwrt-24.10-${{ github.event.inputs.device }}-ccache
 
-    - name: Create ccache tar files
+    - name: Create ccache tar files (打包编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device == 'armv8' || github.event.inputs.device == 'nanopi-r4s' }}
       continue-on-error: true
       working-directory: /builder
@@ -165,7 +165,7 @@ jobs:
         mkdir -p ccache
         tar cf - .ccache | split -d -b 1800m - ccache/${{ github.event.inputs.device }}.tar.
 
-    - name: Upload Cached (releases - ccache)
+    - name: Upload Cached (releases - ccache) (上传编译缓存)
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device == 'armv8' || github.event.inputs.device == 'nanopi-r4s' }}
       continue-on-error: true
       uses: ncipollo/release-action@v1.14.0
@@ -180,7 +180,7 @@ jobs:
         artifacts: |
           ${{ env.build_dir }}/ccache/*
 
-    - name: Prepare Firmware Files
+    - name: Prepare Firmware Files (整理固件)
       working-directory: /builder
       run: |
         mkdir -p rom info
@@ -218,13 +218,13 @@ jobs:
           cd rom && sha256sum * > ../info/sha256sums.txt
         fi
 
-    - name: Upload artifacts
+    - name: Upload artifacts (上传固件)
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.inputs.device }}-openwrt-${{ env.latest_release }}
         path: ${{ env.build_dir }}/rom/*
 
-    - name: Create release
+    - name: Create release (发布固件)
       continue-on-error: true
       uses: ncipollo/release-action@v1
       with:
