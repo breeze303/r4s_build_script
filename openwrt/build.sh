@@ -45,7 +45,7 @@ export gitea=git.cooluc.com
 
 # github mirror
 if [ "$isCN" = "CN" ]; then
-    export github="ghp.ci/github.com"
+    export github="ghgo.xyz/github.com"
 else
     export github="github.com"
 fi
@@ -191,7 +191,8 @@ fi
 # feeds mirror
 if [ "$1" = "rc2" ]; then
     packages="^$(grep packages feeds.conf.default | awk -F^ '{print $2}')"
-    luci="^$(grep luci feeds.conf.default | awk -F^ '{print $2}')"
+    #luci="^$(grep luci feeds.conf.default | awk -F^ '{print $2}')"
+    luci="^b43aea743e78bb478495d2bfca046a0417dbdfe7"
     routing="^$(grep routing feeds.conf.default | awk -F^ '{print $2}')"
     telephony="^$(grep telephony feeds.conf.default | awk -F^ '{print $2}')"
 else
