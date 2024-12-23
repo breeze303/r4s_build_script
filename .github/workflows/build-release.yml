@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       device:
-        description: 'Select the build device'
+        description: 'Select the build device(选择构建设备)'
         required: true
         default: 'x86_64'
         type: choice
