@@ -191,8 +191,7 @@ fi
 # feeds mirror
 if [ "$1" = "rc2" ]; then
     packages="^$(grep packages feeds.conf.default | awk -F^ '{print $2}')"
-    #luci="^$(grep luci feeds.conf.default | awk -F^ '{print $2}')"
-    luci="^b43aea743e78bb478495d2bfca046a0417dbdfe7"
+    luci="^$(grep luci feeds.conf.default | awk -F^ '{print $2}')"
     routing="^$(grep routing feeds.conf.default | awk -F^ '{print $2}')"
     telephony="^$(grep telephony feeds.conf.default | awk -F^ '{print $2}')"
 else
@@ -247,6 +246,7 @@ bash 03-convert_translation.sh
 bash 04-fix_kmod.sh
 bash 05-fix-source.sh
 [ -f "10-custom.sh" ] && bash 10-custom.sh
+find feeds -type f -name "*.orig" -exec rm -f {} \;
 [ "$(whoami)" = "runner" ] && endgroup
 
 rm -f 0*-*.sh 10-custom.sh
