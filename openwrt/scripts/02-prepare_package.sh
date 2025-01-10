@@ -103,6 +103,10 @@ rm -rf package/new/helloworld/luci-app-passwall
 git clone https://$github/xiaorouji/openwrt-passwall package/new/helloworld/passwall 
 mv package/new/helloworld/passwall/luci-app-passwall package/new/helloworld/
 
+#daed
+rm -rf feeds/luci/applications/luci-app-daed
+rm -rf feeds/packages/net/daed
+
 # alist
 rm -rf feeds/packages/net/alist feeds/luci/applications/luci-app-alist
 git clone https://$github/sbwml/openwrt-alist package/new/alist
