@@ -110,7 +110,8 @@ rm -rf package/new/helloworld/daed
 rm -rf package/new/helloworld/luci-app-daed
 git clone --depth 1 https://github.com/QiuSimons/luci-app-daed.git  package/new/daed
 git clone --depth 1 https://github.com/immortalwrt/packages.git package/new/tmp
-mv package/new/tmp/libs/libcron feeds/packages/libs
+mv package/new/tmp/libs/libcron package/new/daed
+ls package/new/daed
 rm -rf package/new/tmp
 
 # alist
