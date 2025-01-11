@@ -106,6 +106,9 @@ mv package/new/helloworld/passwall/luci-app-passwall package/new/helloworld/
 #daed
 rm -rf feeds/luci/applications/luci-app-daed
 rm -rf feeds/packages/net/daed
+rm -rf package/new/helloworld/daed
+rm -rf package/new/helloworld/luci-app-daed
+git clone --depth 1 https://github.com/QiuSimons/luci-app-daed.git  package/new/daed
 
 # alist
 rm -rf feeds/packages/net/alist feeds/luci/applications/luci-app-alist
