@@ -18,6 +18,9 @@ git clone https://github.com/sbwml/wwan-packages package/new/wwan
 rm -rf feeds/luci/applications/luci-app-filemanager
 git clone https://$github/sbwml/luci-app-filemanager package/new/luci-app-filemanager
 
+# luci-app-airplay2
+git clone https://github.com/sbwml/luci-app-airplay2 package/new/airplay2
+
 # luci-app-webdav
 git clone https://$github/sbwml/luci-app-webdav package/new/luci-app-webdav
 
@@ -92,9 +95,6 @@ git clone https://$github/sbwml/luci-app-airconnect package/new/airconnect
 
 # netkit-ftp
 git clone https://$github/sbwml/package_new_ftp package/new/ftp
-
-# nethogs
-git clone https://github.com/sbwml/package_new_nethogs package/new/nethogs
 
 # SSRP & Passwall
 rm -rf feeds/packages/net/{xray-core,v2ray-core,v2ray-geodata,sing-box}

@@ -66,6 +66,9 @@ else
     curl -s $mirror/openwrt/patch/target-modify_for_rockchip.patch | patch -p1
 fi
 
+# libubox
+sed -i '/TARGET_CFLAGS/ s/$/ -Os/' package/libs/libubox/Makefile
+
 # DPDK & NUMACTL
 mkdir -p package/new/{dpdk/patches,numactl}
 curl -s $mirror/openwrt/patch/dpdk/dpdk/Makefile > package/new/dpdk/Makefile
@@ -339,6 +342,7 @@ curl -so files/root/.bashrc $mirror/openwrt/files/root/.bashrc
 
 # rootfs files
 mkdir -p files/etc/sysctl.d
+curl -so files/etc/sysctl.d/10-default.conf $mirror/openwrt/files/etc/sysctl.d/10-default.conf
 curl -so files/etc/sysctl.d/15-vm-swappiness.conf $mirror/openwrt/files/etc/sysctl.d/15-vm-swappiness.conf
 curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/openwrt/files/etc/sysctl.d/16-udp-buffer-size.conf
 if [ "$platform" = "bcm53xx" ]; then
